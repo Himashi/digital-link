@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+dist/
+coverage/
+docs-api/
+data/
+src/generated/
+test/fixtures/
+*.md
