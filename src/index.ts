@@ -28,8 +28,16 @@ export {
   type ElementStringOptions,
 } from "./element-string.js";
 export { normaliseGtin, validateGtin, gs1CheckDigit } from "./gtin.js";
+export {
+  decodeEpc,
+  decompressEpcUri,
+  isEpcCompressedUri,
+  type EpcIdentifier,
+  type EpcEncoding,
+} from "./epc.js";
 export { getAI, listAIs, validateElement } from "./ai.js";
 export { CSET82, CSET39, CSET64 } from "./charsets.js";
 export { DigitalLinkError, type Issue, type IssueCode, type ValidationResult } from "./errors.js";
 export { SYNTAX_DICTIONARY_RELEASE, URI_SYNTAX_VERSION } from "./generated/ai-table.js";
+export { TDT_VERSION } from "./generated/epc-table.js";
 export type { AIDefinition, ComponentSpec, CharacterSet, Element } from "./types.js";

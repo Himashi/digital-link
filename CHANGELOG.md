@@ -6,7 +6,25 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
-## [0.1.0] — unreleased
+## [0.2.0] — unreleased
+
+### Added
+
+- `decodeEpc()`: decode EPC binary strings (hex, base64url or binary) to GS1 element data, for
+  every EPC scheme with a GS1 key, including the TDS 2.x "+" schemes and their "+AIDC" AIs.
+  Generated from GS1 EPC Tag Data Translation 2.2 artefacts; tested against GS1's reference
+  translator on 1,812 vectors.
+- `decompressEpcUri()` and `isEpcCompressedUri()`: expand EPC-compressed Digital Link URIs
+  (`/eh…`, `/ex…`) per the GS1 Digital Link URI compression standard for EPC binary strings
+  1.0.0 §4.2.
+- `TDT_VERSION`; issue codes `EPC_INVALID_ENCODING`, `EPC_UNKNOWN_SCHEME`, `EPC_NOT_GS1_KEY`,
+  `EPC_MALFORMED`, `EPC_UNSUPPORTED`.
+
+### Changed
+
+- Bundle grows from about 20 KB to about 35 KB gzipped (EPC tables).
+
+## [0.1.0] — 2026-10-19
 
 First release.
 
@@ -23,5 +41,6 @@ First release.
 - TypeScript port of every GS1 reference linter, tested against 5,649 GS1 vectors.
 - Validation of mandatory AI associations and invalid AI pairs.
 
-[Unreleased]: https://github.com/Himashi/digital-link/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Himashi/digital-link/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Himashi/digital-link/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Himashi/digital-link/releases/tag/v0.1.0

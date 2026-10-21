@@ -1,7 +1,8 @@
 # @packpath/digital-link
 
 Parse, build and validate [GS1 Digital Link](https://ref.gs1.org/standards/digital-link/) URIs
-and GS1 element strings in TypeScript or JavaScript.
+and GS1 element strings in TypeScript or JavaScript. Decode EPC binary strings from RFID tags, and
+EPC-compressed Digital Link URIs.
 
 - **Standards-first.** Implements GS1 Digital Link URI Syntax **1.7.0** (Aug 2026). Application
   Identifier rules are generated from GS1's own Barcode Syntax Dictionary, not typed by hand.
@@ -9,7 +10,7 @@ and GS1 element strings in TypeScript or JavaScript.
   Engine's Digital Link test vectors, and 5,649 test vectors from GS1's reference linters.
 - **Readable errors.** `validate()` returns every problem as a plain-English message with a
   machine-readable code: _`AI (01) GTIN: value "09520123456789" has an incorrect check digit`_.
-- **Zero dependencies.** ESM and CommonJS, about 20 KB gzipped. Uses no platform APIs, so it
+- **Zero dependencies.** ESM and CommonJS, about 35 KB gzipped. Uses no platform APIs, so it
   runs in browsers, Node.js 18+ and Cloudflare Workers.
 
 ```sh
@@ -52,8 +53,8 @@ if (!result.valid) {
 | Check digits, check character pairs, dates, times, country and currency codes, package types, IBANs, coupons | GS1 reference linters |
 | Mandatory AI associations and invalid pairs (e.g. `(10)` needs `(01)`)   | GS1 General Specifications §4.13           |
 
-Not checked: whether a GS1 Company Prefix is actually allocated (needs GS1 registry data), and
-compressed Digital Link URIs.
+Not checked: whether a GS1 Company Prefix is actually allocated (needs GS1 registry data).
+Not supported: the general compressed Digital Link URI form (only EPC-compressed URIs, below).
 
 ## API
 
@@ -154,6 +155,36 @@ Writes `"bracketed"` (default) or `"raw"` (GS separators where needed) element s
 | `listAIs()`                    | Every known AI                                                             |
 | `validateElement(ai, value)`   | `Issue[]` for one AI value; empty when valid                               |
 
+### EPC binary strings (RFID)
+
+#### `decodeEpc(input, encoding?) → ValidationResult<EpcIdentifier>`
+
+Decodes an EPC binary string, as read from an RFID tag, to GS1 element data. `encoding` is
+`"hex"` (default), `"base64url"` or `"binary"`. Covers every EPC scheme with a GS1
+identification key: SGTIN, SSCC, SGLN, GRAI, GIAI, GSRN, GSRNP, GDTI, CPI, SGCN, ITIP and the
+TDS 2.x "+" schemes including DSGTIN+, with any extra "+AIDC" AIs such as expiry date or batch.
+
+```ts
+decodeEpc("30164596f40c0e5cbe991a83");
+// { valid: true, value: { scheme: "SGTIN-96", filter: 0, elements: [
+//   { ai: "01", value: "09528765123457" }, { ai: "21", value: "123456789123" } ] } }
+```
+
+AI values are not validated here; `decompressEpcUri()` and `build()` do that.
+
+#### `decompressEpcUri(uri, options?) → ValidationResult<string>`
+
+Expands a Digital Link URI whose last path segment is an EPC binary string in hexadecimal
+(`/eh…`) or URI-safe base 64 (`/ex…`). The stem, query string and fragment are kept, and the
+result is validated.
+
+```ts
+decompressEpcUri("https://example.com/exMBZFlvQMDly-mRqD");
+// { valid: true, value: "https://example.com/01/09528765123457/21/123456789123" }
+```
+
+`isEpcCompressedUri(uri)` tells whether a URI has that form, without decoding it.
+
 ### Errors
 
 Every problem is an `Issue`:
@@ -178,8 +209,16 @@ interface Issue {
 | ----------------------------------------------------------------- | ---------------------- |
 | GS1 Digital Link Standard: URI Syntax                             | 1.7.0, ratified Aug 2026 |
 | GS1 Barcode Syntax Dictionary (AI formats, linters, associations) | release 2026-01-27     |
+| GS1 Digital Link URI: Compression Technical Standard for EPC binary strings | 1.0.0, Jul 2025 |
+| GS1 EPC Tag Data Translation artefacts (EPC Tag Data Standard 2.2) | 2.2, 2024-11-18       |
 
-Exported as `URI_SYNTAX_VERSION` and `SYNTAX_DICTIONARY_RELEASE`.
+Exported as `URI_SYNTAX_VERSION`, `SYNTAX_DICTIONARY_RELEASE` and `TDT_VERSION`.
+
+EPC decoding is generated from GS1's Tag Data Translation artefacts and tested against GS1's
+reference translator on 1,812 vectors across all 31 schemes. Two known gaps: Table F method
+14.5.15 (AI 7258) gives `EPC_UNSUPPORTED`, as GS1's reference translator does not implement it
+either; and the delimited-numeric method 14.5.5 follows the reference translator, as the Tag
+Data Standard text was not available to check it against.
 
 Where the dictionary release lags the URI Syntax standard, the standard wins:
 
@@ -194,8 +233,8 @@ Behaviour that differs from the GS1 Syntax Engine, each following the standard's
 
 ## Licence
 
-Apache-2.0. Includes data and code derived from the GS1 Barcode Syntax Dictionary
-(Apache-2.0, © GS1 AISBL); see [NOTICE](./NOTICE).
+Apache-2.0. Includes data and code derived from the GS1 Barcode Syntax Dictionary and the GS1
+EPC Tag Data Translation artefacts (both Apache-2.0, © GS1 AISBL); see [NOTICE](./NOTICE).
 
 "GS1" and "GS1 Digital Link" are trademarks of GS1 AISBL. This project is not affiliated with or
 endorsed by GS1.

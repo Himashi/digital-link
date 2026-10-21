@@ -1,6 +1,6 @@
 {
   "name": "@packpath/digital-link",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parse, build and validate GS1 Digital Link URIs and GS1 element strings. Zero dependencies; runs in browsers, Node.js and Cloudflare Workers.",
   "license": "Apache-2.0",
   "author": "Starlab Systems Limited",
@@ -54,7 +54,7 @@
     "access": "public"
   },
   "scripts": {
-    "generate": "node scripts/generate-ai-table.mjs",
+    "generate": "node scripts/generate-ai-table.mjs && node scripts/generate-epc-table.mjs",
     "build": "tsup",
     "typecheck": "tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",

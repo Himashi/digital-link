@@ -12,6 +12,13 @@ Dictionary and Syntax Tests (https://github.com/gs1/gs1-syntax-dictionary):
   Copyright (c) 2021-2025 GS1 AISBL
   Licensed under the Apache License, Version 2.0.
 
+This product includes data derived from the GS1 EPC Tag Data Translation
+artefacts (https://github.com/gs1/TDT): src/generated/epc-table.ts is generated
+from them. The test suite's test/fixtures/epc-vectors.json was produced with
+GS1's TDT reference translator (demo/TDTtranslator.js).
+  Copyright (c) GS1 AISBL
+  Licensed under the Apache License, Version 2.0.
+
 The test suite includes test vectors adapted from the GS1 Syntax Engine
 (https://github.com/gs1/gs1-syntax-engine), Copyright (c) GS1 AISBL,
 licensed under the Apache License, Version 2.0.

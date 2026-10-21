@@ -35,7 +35,13 @@ export type IssueCode =
   | "BUILD_NO_PRIMARY_KEY"
   | "BUILD_INVALID_STEM"
   // GTIN
-  | "GTIN_INVALID";
+  | "GTIN_INVALID"
+  // EPC binary strings (Tag Data Standard)
+  | "EPC_INVALID_ENCODING"
+  | "EPC_UNKNOWN_SCHEME"
+  | "EPC_NOT_GS1_KEY"
+  | "EPC_MALFORMED"
+  | "EPC_UNSUPPORTED";
 
 /** A single, human-readable validation problem. */
 export interface Issue {
