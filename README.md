@@ -239,4 +239,4 @@ EPC Tag Data Translation artefacts (both Apache-2.0, © GS1 AISBL); see [NOTICE]
 "GS1" and "GS1 Digital Link" are trademarks of GS1 AISBL. This project is not affiliated with or
 endorsed by GS1.
 
-Maintained by [Packpath](https://packpath.co.uk), a product of Starlab Systems Limited.
+Maintained by [Packpath](https://packpath.starlabsystems.uk), a product of Starlab Systems Limited.
